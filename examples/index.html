@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+
+    <script src="../dist/library.js"></script>
+    <script id="get-user-media">
+
+    initialize();
+
+    function getUserAudio() {
+      return new Promise((resolve, reject) => {
+        navigator.getUserMedia({ audio: true }, resolve, reject);
+      });
+    }
+
+    function createLoadAudio(audioContext) {
+
+      function decodeAudioSample(sampleArrayBufferPromise) {
+        return Promise.resolve(sampleArrayBufferPromise)
+          .then((sampleArrayBuffer)=> {
+            return audioContext.decodeAudioData(sampleArrayBuffer);
+          });
+      }
+
+      function loadSample(wav) {
+        return fetch(wav).then((response) => {
+          if (!response.ok) {
+            throw new Error("file fetch failed");
+          }
+
+          return response.arrayBuffer();
+        });
+      }
+
+      return function(load) {
+        return loadSample(load).then(decodeAudioSample);
+      }
+    }
+
+
+
+    function initialize() {
+      const audioContext = new AudioContext();
+      const loadAudio = createLoadAudio(audioContext);
+
+      loadAudio('countdown.mp3').then((audioBuffer) => {
+        const source = audioContext.createBufferSource();
+        source.buffer = audioBuffer;
+
+        return source;
+      }).then((source) => {
+        const sphinxProcessor = new PocketSphinx.Audio(audioContext, 16000);
+
+        const decimatedSource = sphinxProcessor.start(source);
+
+        decimatedSource.connect(audioContext.destination);
+
+        sphinxProcessor.on('data', (buffer) => {
+          debugger;
+        });
+
+        source.loop = true;
+        source.start();
+      });
+
+    }
+
+    /*
+    const pocketSphinx = new PocketSphinx({
+      pocketSphinxUrl: '../dist/pocketsphinx.js'
+    });
+
+    const dictionary = {
+      'ONE': ['W AH N'],
+      'TWO': ['T UW'],
+      'THREE': ['TH R IY'],
+      'FOUR': ['F AO R'],
+      'FIVE': ['F AY V'],
+      'SIX': ['S IH K S'],
+      'SEVEN': ['S EH V AH N'],
+      'EIGHT': ['EY T'],
+      'NINE': ['N AY N'],
+      'ZERO': ['Z IH R OW'],
+      'AND': ['AE N D', 'AH N D']
+    };
+
+    pocketSphinx.addWords(dictionary);
+    pocketSphinx.keywords(Object.keys(dictionary));
+    */
+
+    </script>
+  </body>
+</html>

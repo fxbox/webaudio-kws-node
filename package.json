@@ -1,0 +1,30 @@
+{
+  "name": "pocketsphinx-browser",
+  "version": "1.0.0",
+  "description": "Pocket Sphinx with a nice ES6 API",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "pocketsphinx",
+    "browser",
+    "voice",
+    "recognition"
+  ],
+  "author": "Samuel Giles <sgiles@mozilla.com>",
+  "license": "MIT",
+  "dependencies": {
+    "bridge": "https://github.com/fxos-components/bridge.git",
+    "eventemitter2": "^2.0.0"
+  },
+  "devDependencies": {
+    "brfs": "^1.4.3",
+    "gulp": "^3.9.1",
+    "mocha": "^2.5.3",
+    "rollup-plugin-browserify-transform": "^0.1.0",
+    "rollup-plugin-commonjs": "^3.1.0",
+    "rollup-plugin-node-resolve": "^1.7.1",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
