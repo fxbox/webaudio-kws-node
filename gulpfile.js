@@ -4,7 +4,7 @@ const nodeResolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
 const source = require('vinyl-source-stream');
 
-const WORKER = 'lib/worker.js';
+const WORKER = 'lib/worker/index.js';
 const LIBRARY = 'lib/index.js';
 
 gulp.task('rollup-worker', () => {
