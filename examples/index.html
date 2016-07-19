@@ -19,30 +19,6 @@ navigator.getUserMedia = (navigator.getUserMedia ||
       });
     }
 
-    function createLoadAudio(audioContext) {
-
-      function decodeAudioSample(sampleArrayBufferPromise) {
-        return Promise.resolve(sampleArrayBufferPromise)
-          .then((sampleArrayBuffer)=> {
-            return audioContext.decodeAudioData(sampleArrayBuffer);
-          });
-      }
-
-      function loadSample(wav) {
-        return fetch(wav).then((response) => {
-          if (!response.ok) {
-            throw new Error("file fetch failed");
-          }
-
-          return response.arrayBuffer();
-        });
-      }
-
-      return function(load) {
-        return loadSample(load).then(decodeAudioSample);
-      }
-    }
-
     function initialize() {
       const audioContext = new AudioContext();
       window.hack_audio = audioContext;
@@ -53,43 +29,28 @@ navigator.getUserMedia = (navigator.getUserMedia ||
         const dictionary = {
           'PROJECT': ['P R AA JH EH K T', 'P R OW JH EH K T' ],
           'CUE': ['K Y UW'],
-          'MOZILLA': ['M AO Z IH L AH', 'M AO Z IH L ER'],
+          'HELLO': ['HH AH L OW'],
+          'MOZILLA': ['M AO Z IH L AH', 'M AO Z IH L ER', 'M AH Z IH L AH'],
           'OKAY': ['OW K EY'],
           'GOOGLE': ['G UW G AH L']
         };
 
-        const speechRecognition = new PocketSphinx.PocketSphinx({
+        const speechRecognition = new PocketSphinx(audioContext, {
           pocketSphinxUrl: '../dist/pocketsphinx.js',
           workerUrl: '../dist/ps-worker.js',
           args: [
             ['-kws_threshold', '2'],
-            ['-samprate', '16000'],
           ]
         });
 
-        speechRecognition.initialize()
-          .then(() => speechRecognition.addWords(dictionary))
-          .then(() => speechRecognition.addKeyword('OKAY GOOGLE'))
-          .then(() => speechRecognition.start())
+        speechRecognition.on('keywordspotted', (event) => console.log);
+
+        return speechRecognition.addDictionary(dictionary)
+          .then(() => speechRecognition.addKeyword('MOZILLA'))
           .then(() => {
-            sphinxProcessor.on('data', (buffer) => {
-              speechRecognition.process(buffer).then((result) => {
-                if (result.hypothesis.length)
-                  document.body.innerText = JSON.stringify(result);
-              });
-            });
+            source.connect(speechRecognition);
+            speechRecognition.connect(audioContext.destination);
           })
-          .catch((e) => {
-            console.log(e);
-          });
-
-
-        const sphinxProcessor = new PocketSphinx.Audio(audioContext, 16000);
-
-        const decimatedSource = sphinxProcessor.start(source);
-
-        decimatedSource.connect(audioContext.destination);
-        source.loop = false;
       }).catch((e) => {
         console.error(e)
       });

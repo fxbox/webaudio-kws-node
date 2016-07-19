@@ -1858,6 +1858,8 @@
 	    this[p.grammarMap] = new Map();
 	    this[p.keywordMap] = new Map();
 
+	    this.lastHypothesisLength = 0;
+
 	    this[p.importIntoScopeFn] =
 	      options.importScripts ||
 	      self.importScripts ||
@@ -2036,11 +2038,29 @@
 	      return;
 	    }
 
-	    const retval = {
-	      hypothesis: this[p.recognizer].getHyp(),
-	    };
+	    const newWord = this.getHypothesis();
+	    if (newWord) {
+	      return {
+	        hypothesis: newWord,
+	      };
+	    }
 
-	    return retval;
+	    return false;
+	  }
+
+	  getHypothesis() {
+	    const hyp = this[p.recognizer].getHyp();
+
+	    if (this.lastHypothesisLength == hyp.length) {
+	      return false;
+	    }
+
+	    const newWord = hyp.substring(this.lastHypothesisLength).trim();
+	    this.lastHypothesisLength = hyp.length;
+
+	    console.log("recognized: ", newWord);
+
+	    return newWord;
 	  }
 
 	  [p.checkInit]() {
