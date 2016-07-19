@@ -59,9 +59,9 @@ speechRecognition.on('keywordspotted', (event) => {
 
 ## TODO
 
-Full pocketphinx capabilities (grammars etc)
-Remove polyfill for composite nodes when supported by Web Audio API
-Use AudioWorker once supported.
+- Full pocketsphinx capabilities (grammars etc)
+- Remove polyfill for composite nodes when supported by Web Audio API
+- Use AudioWorker once supported.
 
 # License
 
