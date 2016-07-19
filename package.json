@@ -1,5 +1,5 @@
 {
-  "name": "psjs",
+  "name": "webaudio-kws-node",
   "version": "1.0.0",
   "description": "Pocket Sphinx with a nice ES6 API",
   "main": "index.js",

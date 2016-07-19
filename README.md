@@ -1,4 +1,4 @@
-# psjs - PocketSphinx JS
+# WebAudio API Keyword spotting
 
 This is a wrapper around [pocketsphinx.js](https://github.com/syl22-00/pocketsphinx.js)
 designed for use in the browser in conjunction with the WebAudio API and any
