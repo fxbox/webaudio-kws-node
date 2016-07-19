@@ -6,6 +6,10 @@
 
     <script src="../dist/library.js"></script>
     <script id="get-user-media">
+navigator.getUserMedia = (navigator.getUserMedia ||
+                          navigator.webkitGetUserMedia ||
+                          navigator.mozGetUserMedia ||
+                          navigator.msGetUserMedia);
 
     initialize();
 
@@ -39,57 +43,57 @@
       }
     }
 
-
-
     function initialize() {
       const audioContext = new AudioContext();
-      const loadAudio = createLoadAudio(audioContext);
+      window.hack_audio = audioContext;
+      getUserAudio().then((stream) => {
+        return audioContext.createMediaStreamSource(stream);
+      })
+      .then((source) => {
+        const dictionary = {
+          'PROJECT': ['P R AA JH EH K T', 'P R OW JH EH K T' ],
+          'CUE': ['K Y UW'],
+          'MOZILLA': ['M AO Z IH L AH', 'M AO Z IH L ER'],
+          'OKAY': ['OW K EY'],
+          'GOOGLE': ['G UW G AH L']
+        };
 
-      loadAudio('countdown.mp3').then((audioBuffer) => {
-        const source = audioContext.createBufferSource();
-        source.buffer = audioBuffer;
+        const speechRecognition = new PocketSphinx.PocketSphinx({
+          pocketSphinxUrl: '../dist/pocketsphinx.js',
+          workerUrl: '../dist/ps-worker.js',
+          args: [
+            ['-kws_threshold', '2'],
+            ['-samprate', '16000'],
+          ]
+        });
 
-        return source;
-      }).then((source) => {
+        speechRecognition.initialize()
+          .then(() => speechRecognition.addWords(dictionary))
+          .then(() => speechRecognition.addKeyword('OKAY GOOGLE'))
+          .then(() => speechRecognition.start())
+          .then(() => {
+            sphinxProcessor.on('data', (buffer) => {
+              speechRecognition.process(buffer).then((result) => {
+                if (result.hypothesis.length)
+                  document.body.innerText = JSON.stringify(result);
+              });
+            });
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+
+
         const sphinxProcessor = new PocketSphinx.Audio(audioContext, 16000);
 
         const decimatedSource = sphinxProcessor.start(source);
 
         decimatedSource.connect(audioContext.destination);
-
-        sphinxProcessor.on('data', (buffer) => {
-          debugger;
-        });
-
-        source.loop = true;
-        source.start();
+        source.loop = false;
+      }).catch((e) => {
+        console.error(e)
       });
-
     }
-
-    /*
-    const pocketSphinx = new PocketSphinx({
-      pocketSphinxUrl: '../dist/pocketsphinx.js'
-    });
-
-    const dictionary = {
-      'ONE': ['W AH N'],
-      'TWO': ['T UW'],
-      'THREE': ['TH R IY'],
-      'FOUR': ['F AO R'],
-      'FIVE': ['F AY V'],
-      'SIX': ['S IH K S'],
-      'SEVEN': ['S EH V AH N'],
-      'EIGHT': ['EY T'],
-      'NINE': ['N AY N'],
-      'ZERO': ['Z IH R OW'],
-      'AND': ['AE N D', 'AH N D']
-    };
-
-    pocketSphinx.addWords(dictionary);
-    pocketSphinx.keywords(Object.keys(dictionary));
-    */
-
     </script>
   </body>
 </html>

@@ -19,12 +19,12 @@
     "eventemitter2": "^2.0.0"
   },
   "devDependencies": {
-    "brfs": "^1.4.3",
     "gulp": "^3.9.1",
     "mocha": "^2.5.3",
     "rollup-plugin-browserify-transform": "^0.1.0",
     "rollup-plugin-commonjs": "^3.1.0",
     "rollup-plugin-node-resolve": "^1.7.1",
+    "rollup-stream": "^1.11.0",
     "vinyl-source-stream": "^1.1.0"
   }
 }
