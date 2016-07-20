@@ -2724,6 +2724,7 @@
 
 	    this[_output] = decimationNode;
 
+	    this[p.setupEvents]();
 	    // Kick off initialization.
 	    this[p.initialization] = this[p.pocketSphinx].initialize();
 	  }
