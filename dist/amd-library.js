@@ -736,16 +736,15 @@ define(function () { 'use strict';
 
 	  };
 
-	  if (typeof define === 'function' && define.amd) {
+	  if (typeof exports === 'object') {
+	    // CommonJS
+	    module.exports = EventEmitter;
+	  } else if (typeof define === 'function' && define.amd) {
 	     // AMD. Register as an anonymous module.
 	    define(function() {
 	      return EventEmitter;
 	    });
-	  } else if (typeof exports === 'object') {
-	    // CommonJS
-	    module.exports = EventEmitter;
-	  }
-	  else {
+      } else {
 	    // Browser global.
 	    window.EventEmitter2 = EventEmitter;
 	  }
