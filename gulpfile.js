@@ -23,7 +23,24 @@ gulp.task('rollup-worker', () => {
   .pipe(gulp.dest('dist'));
 });
 
-gulp.task('rollup-lib', () => {
+gulp.task('rollup-lib-amd', () => {
+  return rollup({
+    entry: LIBRARY,
+    plugins: [
+      nodeResolve({
+        browser: true,
+        main: true
+      }),
+      commonjs(),
+    ],
+    format: 'amd',
+    moduleName: 'PocketSphinx'
+  })
+  .pipe(source('amd-library.js'))
+  .pipe(gulp.dest('dist'));
+});
+
+gulp.task('rollup-lib-umd', () => {
   return rollup({
     entry: LIBRARY,
     plugins: [
@@ -36,7 +53,7 @@ gulp.task('rollup-lib', () => {
     format: 'umd',
     moduleName: 'PocketSphinx'
   })
-  .pipe(source('library.js'))
+  .pipe(source('umd-library.js'))
   .pipe(gulp.dest('dist'));
 });
 
@@ -48,4 +65,4 @@ gulp.task('copy-pocketsphinx-compiled', () => {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('default', ['copy-pocketsphinx-compiled', 'rollup-lib', 'rollup-worker']);
+gulp.task('default', ['copy-pocketsphinx-compiled', 'rollup-lib-amd', 'rollup-lib-umd', 'rollup-worker']);
