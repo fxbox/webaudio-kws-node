@@ -1,0 +1,3 @@
+[submodule "lib/external/pocketsphinxjs"]
+	path = lib/external/pocketsphinxjs
+	url = https://github.com/samgiles/pocketsphinx.js.git
