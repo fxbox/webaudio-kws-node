@@ -60,7 +60,7 @@ gulp.task('rollup-lib-umd', () => {
 gulp.task('copy-pocketsphinx-compiled', () => {
   return gulp
     .src([
-      'lib/external/pocketsphinxjs/webapp/js/pocketsphinx*'
+      'lib/external/pocketsphinx*'
     ])
     .pipe(gulp.dest('dist'));
 });
