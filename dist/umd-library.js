@@ -3075,6 +3075,7 @@
 	  [p.setupEvents]() {
 	    this[p.pocketSphinx].on('keywordspotted', (event) => {
 	      if (!this.voiceDetected) { return; };
+	      this.voiceDetected = false;
 	      this.emit('keywordspotted', event);
 	    });
 	  }
