@@ -3076,8 +3076,10 @@
 
 	  [p.setupEvents]() {
 	    this[p.pocketSphinx].on('keywordspotted', (event) => {
-	      if (!this.voiceDetected) { return; };
+	      if (!this.voiceDetected) { return };
+
 	      this.voiceDetected = false;
+	      console.log('Voice activity stopped');
 	      this.emit('keywordspotted', event);
 	    });
 	  }
