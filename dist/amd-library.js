@@ -2792,7 +2792,7 @@ define(function () { 'use strict';
 	  // log stuff
 	  this.logging = false;
 	  this.log_i = 0;
-	  this.log_limit = 100;
+	  this.log_limit = 100000;
 
 	  this.triggerLog = function(limit) {
 	    this.logging = true;
