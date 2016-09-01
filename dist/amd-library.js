@@ -2984,6 +2984,8 @@ define(function () { 'use strict';
 	    };
 
 	    this.vad = new VAD(vadOptions);
+	    // Turn on logging for debug
+	    this.vad.triggerLog();
 
 	    this[p.setupEvents]();
 	    // Kick off initialization.
